@@ -12,7 +12,9 @@ module Ooor
 
     def load_config(config_file=nil, env=nil)
       config_file ||= defined?(Rails.root) && "#{Rails.root}/config/ooor.yml" || 'ooor.yml'
-      @config = HashWithIndifferentAccess.new(YAML.load_file(config_file)[env || 'development'])
+      raise SystemCallError.new("Config file not found") unless File.exist?(config_file)
+        @config = HashWithIndifferentAccess.new(YAML.load_file(config_file)[env || 'development'])
+      
     rescue SystemCallError
       puts """failed to load OOOR yaml configuration file.
          make sure your app has a #{config_file} file correctly set up
