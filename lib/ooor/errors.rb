@@ -20,6 +20,8 @@ module Ooor
   end
 
   class OpenERPServerError < RuntimeError
+    attr_accessor :error_hash
+    
     def initialize(error, method, *args)
       begin
         #extracts the eventual error log from OpenERP response as OpenERP doesn't enforce carefully*
@@ -28,6 +30,7 @@ module Ooor
       rescue SyntaxError
       end
       if openerp_error_hash.is_a? Hash
+        @error_hash = openerp_error_hash
         if args[0].is_a?(String) && (args[1].is_a?(Integer) || args[1].to_i != 0) && args[2].is_a?(String)
           args[2] = "####"
         end
